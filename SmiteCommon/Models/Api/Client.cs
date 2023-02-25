@@ -174,6 +174,13 @@ public class Client : HttpClient
             return new();
         }
 
-        return JsonSerializer.Deserialize<List<Item>>(content, Configuration.JsonSerializerOptions);
+        List<Item> items = JsonSerializer.Deserialize<List<Item>>(content, Configuration.JsonSerializerOptions);
+
+        foreach (Item item in items)
+        {
+            item.Parse();
+        }
+
+        return items;
     }
 }

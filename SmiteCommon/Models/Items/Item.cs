@@ -154,4 +154,147 @@ public class Item
     public bool IsGlyph => ItemTier == 4 && Type == "Item" && Price > 1;
 
     public override string ToString() => Name;
+
+
+    public void BindFloatValue(string name, string value)
+    {
+        float valueAsFloat = ParsePercentAsFloat(value);
+
+        switch (name)
+        {
+            case "AttackSpeed":
+                AttackSpeed = valueAsFloat;
+                return;
+
+            case "CooldownReduction":
+                CooldownReduction = valueAsFloat;
+                return;
+
+            case "CriticalStrikeChance":
+                CriticalStrikeChance = valueAsFloat;
+                return;
+
+            case "CrowdControlReduction":
+                CrowdControlReduction = valueAsFloat;
+                return;
+
+            case "MagicalLifesteal":
+                MagicalLifesteal = valueAsFloat;
+                return;
+
+            case "MagicalPenetrationPercent":
+                MagicalPenetrationPercent = valueAsFloat;
+                return;
+
+            case "MovementSpeed":
+                MovementSpeed = valueAsFloat;
+                return;
+
+            case "PhysicalLifesteal":
+                PhysicalLifesteal = valueAsFloat;
+                return;
+
+            case "PhysicalPenetrationPercent":
+                PhysicalPenetrationPercent = valueAsFloat;
+                return;
+
+            default:
+                break;
+        }
+    }
+
+    public void BindIntValue(string name, string value)
+    {
+        int valueAsInt = int.Parse(value);
+
+        switch (name)
+        {
+            case "Health":
+                Health = valueAsInt;
+                return;
+
+            case "HP5":
+                HP5 = valueAsInt;
+                return;
+
+            case "MagicalPower":
+                MagicalPower = valueAsInt;
+                return;
+
+            case "MagicalPenetration":
+                MagicalPenetration = valueAsInt;
+                return;
+
+            case "MagicalProtection":
+                MagicalProtection = valueAsInt;
+                return;
+
+            case "Mana":
+                Mana = valueAsInt;
+                return;
+
+            case "MP5":
+                MP5 = valueAsInt;
+                return;
+
+            case "PhysicalPenetration":
+                PhysicalPenetration = valueAsInt;
+                return;
+
+            case "PhysicalPower":
+                PhysicalPower = valueAsInt;
+                return;
+
+            case "PhysicalProtection":
+                PhysicalProtection = valueAsInt;
+                return;
+
+            default:
+                break;
+        }
+    }
+
+    public static string ConvertName(string value)
+    {
+        return value switch
+        {
+            "MagicalPenetration" => "MagicalPenetrationPercent",
+            "PhysicalPenetration" => "PhysicalPenetrationPercent",
+            _ => value,
+        };
+    }
+
+    public static string NormalizeName(string value) => value.Replace(" ", "").Trim();
+
+    public static string NormalizeValue(string value) => value.Replace("+", "").Trim();
+
+    public void Parse()
+    {
+        foreach (MenuItem stat in ItemDescription.MenuItems)
+        {
+            string name = stat.Description;
+            string value = stat.Value;
+
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(value)) continue;
+
+            name = NormalizeName(name);
+            value = NormalizeValue(value);
+
+            if (value.Contains('%'))
+            {
+                BindFloatValue(ConvertName(name), value);
+            }
+            else
+            {
+                BindIntValue(name, value);
+            }
+        }
+    }
+
+    public static float ParsePercentAsFloat(string value)
+    {
+        value = value.Replace("%", "");
+        return MathF.Round(float.Parse(value) * 0.01f, 2);
+    }
+
 }

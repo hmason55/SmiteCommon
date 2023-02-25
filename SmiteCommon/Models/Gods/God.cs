@@ -31,9 +31,12 @@ public class God
     public float HealthPerFive { get; set; }
     public int HealthPerLevel { get; set; }
     public float HP5PerLevel { get; set; }
+
     [JsonPropertyName("godIcon_URL")]
     public string IconUrl { get; set; }
-    public int Id { get; set; }
+
+    [JsonPropertyName("id")]
+    public int Id { get; set; } = -1;
     public string Lore { get; set; }
     public int MagicalPower { get; set; }
     public float MagicalPowerPerLevel { get; set; }
